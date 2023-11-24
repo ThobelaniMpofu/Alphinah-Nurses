@@ -3,10 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import InvoiceGenerator from './InvoiceGenerator'; // Import the new component
 
 const Timesheet = () => {
     const { register, handleSubmit, watch, setValue } = useForm();
     const [selectedDateRange, setSelectedDateRange] = useState([]);
+    const [formData, setFormData] = useState(null); // Store form data
+
     const onSubmit = (data) => {
         console.log(data);
     };
@@ -68,6 +71,8 @@ const Timesheet = () => {
                 <button type="submit">Submit</button>
             </form>
             <button onClick={goToHospital}>Go to Hospital</button>
+            {formData && <InvoiceGenerator formData={formData} />} {/* Render the InvoiceGenerator component with form data */}
+
         </div>
     );
 };
