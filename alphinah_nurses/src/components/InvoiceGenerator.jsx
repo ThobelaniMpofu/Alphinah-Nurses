@@ -1,30 +1,59 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { Button, Table } from 'react-bootstrap';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
-const InvoiceGenerator = ({ formData }) => {
-    // Generate invoice based on form data
-    const generateInvoice = () => {
-        // Example: Create an invoice string with the submitted data
-        const invoiceText = `
-      Invoice
-      Name: ${formData.name}
-      Surname: ${formData.surname}
-      Occupation: ${formData.occupation}
-      Hospital Name: ${formData.hospital_name}
-      Working Days: ${formData.workingDays.join(', ')}
-    `;
+const InvoiceGenerator = () => {
+  const contentRef = useRef(null);
 
-        // You can further customize the invoice generation based on your needs
+  const generateInvoice = () => {
+    const input = contentRef.current;
 
-        console.log(invoiceText);
-        // For a real application, you might want to send the invoice data to a server or display it in a modal
-    };
+    html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      pdf.addImage(imgData, 'PNG', 0, 0, 210, 297); // A4 size: 210mm x 297mm
+      pdf.save('invoice.pdf');
+    });
+  };
 
-    return (
-        <div>
-            <h2>Invoice Generator</h2>
-            <button onClick={generateInvoice}>Generate Invoice</button>
-        </div>
-    );
+  return (
+    <div>
+      <div ref={contentRef}>
+        {/* Your Bootstrap-styled invoice content goes here */}
+        <h1 className="text-center">Invoice</h1>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Description</th>
+              <th>Quantity</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Item 1</td>
+              <td>Description 1</td>
+              <td>2</td>
+              <td>$20.00</td>
+            </tr>
+            <tr>
+              <td>Item 2</td>
+              <td>Description 2</td>
+              <td>1</td>
+              <td>$15.00</td>
+            </tr>
+          </tbody>
+        </Table>
+        <p className="text-right">Total: $35.00</p>
+      </div>
+
+      <Button variant="primary" onClick={generateInvoice} className="mt-3">
+        Generate Invoice PDF
+      </Button>
+    </div>
+  );
 };
 
 export default InvoiceGenerator;

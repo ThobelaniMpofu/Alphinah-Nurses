@@ -1,26 +1,35 @@
 // src/App.jsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Timesheet from './components/Timesheet';
-import Hospital from './components/Hospital'
+import { BrowserRouter as Router, Routes, Route, Link, BrowserRouter } from 'react-router-dom';
+import SubmitTimesheet from './components/SubmitTimesheet';
+import ApproveTimesheets from './components/ApproveTimesheets';
+import NavBar from './components/NavBar';
+import HomePage from './components/HomePage';
+import SendInvoices from './components/SendInvoices';
+import ContactPage from './components/ContactPage';
+import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import ColorSchemesExample from './components/ColorSchemesExample';
+
 
 function App() {
     return (
-        <Router>
-            <Routes> {/* Wrap Routes around your Route components */}
-                <Route path="/new-page" element={<Timesheet />} />
-                <Route path="/Hospital" element={<Hospital />} /> {/* Add this line for the Hospital route */}
-                <Route path="/" element={<>
-                    <h1>Alphinah Nurses</h1>
-                    <div className="card">
-                        <Link to="/new-page">
-                            <button>Go to New Page</button>
-                        </Link>
-                        <p>A world of care!</p>
-                    </div>
-                </>} />
-            </Routes>
-        </Router>
+        <BrowserRouter>
+            <div className='App'>
+                <ColorSchemesExample/>
+                <div id="page-body">
+                <Routes> {/* Wrap Routes around your Route components */}
+                    <Route path="/" element={<HomePage/>} />
+                    <Route path="/Submit-Timesheet" element={<SubmitTimesheet/>} />
+                    <Route path="/Approve-Timesheets" element={<ApproveTimesheets/>} /> 
+                    <Route path="/Send-Invoices" element={<SendInvoices/>} />
+                    <Route path="/contactPage" element={<ContactPage/>}/>
+
+                  
+                </Routes>
+                </div>
+            </div>
+        </BrowserRouter>
     );
 }
 

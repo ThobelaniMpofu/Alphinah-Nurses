@@ -1,8 +1,10 @@
 // src/components/Hospital.jsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
+import EmployeeCards from './EmployeeCards';
 
-const Hospital = () => {
+const ApproveTimesheets = () => {
     const navigate = useNavigate();
 
     const goToHome = () => {
@@ -13,9 +15,9 @@ const Hospital = () => {
         <div>
             <h2>Hospital Page</h2>
             {/* Add the content for your Timesheet page */}
-            <button onClick={goToHome}>Go to Home</button>
+            <EmployeeCards/>
         </div>
     );
 };
 
-export default Hospital;
+export default ApproveTimesheets;

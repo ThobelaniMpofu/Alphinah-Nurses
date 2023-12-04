@@ -3,9 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import InvoiceGenerator from './InvoiceGenerator'; // Import the new component
+import SendInvoices from './SendInvoices'; // Import the new component
+import { Container } from 'react-bootstrap';
+import WeeklyTimesheetForm from './WeeklyTimesheetForm';
+import NameForm from './NameForm';
 
-const Timesheet = () => {
+const SubmitTimesheet = () => {
     const { register, handleSubmit, watch, setValue } = useForm();
     const [selectedDateRange, setSelectedDateRange] = useState([]);
     const [formData, setFormData] = useState(null); // Store form data
@@ -17,21 +20,14 @@ const Timesheet = () => {
     const navigate = useNavigate();
 
     const goToHospital = () => {
-        navigate('/Hospital');
+        navigate('/Approve-Timesheets');
     };
 
     return (
         <div>
             <h2>Timesheet Page</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div>
-                    <label>Name:</label>
-                    <input {...register('name', { required: true })} />
-                </div>
-                <div>
-                    <label>Surname:</label>
-                    <input {...register('surname', { required: true })} />
-                </div>
+                <NameForm/>
                 <div>
                     <label>Occupation:</label>
                     <select {...register('occupation', { required: true })}>
@@ -56,25 +52,15 @@ const Timesheet = () => {
                 <div>
                     <label>Working Days:</label>
                     {/* You can customize the Calendar component based on your needs */}
-                    <Calendar
-                        onChange={(date) => {
-                            // If there are exactly two dates selected, treat it as a range
-                            if (date.length === 2) {
-                                setValue('workingDays', date);
-                                setSelectedDateRange(date);
-                            }
-                        }}
-                        selectRange
-                        value={selectedDateRange}
-                    />
+                    
                 </div>
-                <button type="submit">Submit</button>
+               
             </form>
-            <button onClick={goToHospital}>Go to Hospital</button>
-            {formData && <InvoiceGenerator formData={formData} />} {/* Render the InvoiceGenerator component with form data */}
-
+            
+            {formData && <SendInvoices formData={formData} />} {/* Render the InvoiceGenerator component with form data */}
+            <WeeklyTimesheetForm/>
         </div>
     );
 };
 
-export default Timesheet;
+export default SubmitTimesheet;
