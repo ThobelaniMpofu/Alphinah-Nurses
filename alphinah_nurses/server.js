@@ -1,15 +1,33 @@
 import express, { json } from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import router from './src/routes/timesheetroutes.js';
+import cors from 'cors';
+import bodyParser from 'body-parser';
 const app = express();
 const PORT = process.env.VITE_PORT || 6000; // Change the fallback port if needed
+
+
 
 dotenv.config({ path: './config.env' });
 const DB = process.env.DATABASE;
 console.log('Database is: ' + DB);
 
+
 // Middleware
-app.use(json());
+app.use(cors());
+app.use(bodyParser.json());
+//app.use(json());
+app.use('/timesheets', router);
+
+//ROUTES
+//app.get('/', (req, res) => {
+//    res.send('We are on home');
+//});
+//app.get('/timesheets', (req, res) => {
+//    res.send('We are about to submit timesheets!');
+//});
+
 
 // MongoDB connection
 mongoose.connect(DB, {
@@ -27,31 +45,6 @@ mongoose.connection.on('connected', () => {
 
 mongoose.connection.on('error', (err) => {
     console.error(`MongoDB connection error: ${err}`);
-});
-
-// Define your Timesheet schema and model using Mongoose
-const timesheetSchema = new mongoose.Schema({
-    name: String,
-    surname: String,
-    occupation: String,
-    hospital_name: String,
-    workingDays: [Date],
-});
-
-const Timesheet = mongoose.model('Timesheet', timesheetSchema);
-
-//API endpoint to save Timesheet data
-app.post('/api/timesheet', async (req, res) => {
-    const timesheetData = req.body;
-
-    try {
-        const timesheet = new Timesheet(timesheetData);
-        await timesheet.save();
-        res.status(201).json({ message: 'Timesheet data saved successfully' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
 });
 
 //Start the server
