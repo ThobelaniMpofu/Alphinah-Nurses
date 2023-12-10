@@ -5,7 +5,7 @@ import router from './src/routes/timesheetroutes.js';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 const app = express();
-const PORT = process.env.VITE_PORT || 6000; // Change the fallback port if needed
+const PORT = process.env.VITE_PORT || 3000; // Change the fallback port if needed
 
 
 
