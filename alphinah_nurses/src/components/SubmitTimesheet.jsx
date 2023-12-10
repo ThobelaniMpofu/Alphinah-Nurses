@@ -14,8 +14,12 @@ const SubmitTimesheet = () => {
 
     const onSubmit = async (data) => {
         try {
+            
             console.log('Earnings:', earnings);
-
+            // Add the earnings value to the data object
+            data.earnings = earnings;
+            data.start_date = timesheet.weekStartDate;
+            console.log("The selected days for dayshift are " + timesheet.dayShift);
             const response = await axios.post('http://localhost:3000/timesheets', data, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -26,6 +30,7 @@ const SubmitTimesheet = () => {
                 const result = response.data;
                 setFormData(result);
                 console.log('Timesheet submitted successfully:', result);
+                console.log('Timesheet submitted:', data);
             } else {
                 console.error('Failed to submit timesheet:', response.statusText);
             }
@@ -70,6 +75,7 @@ const SubmitTimesheet = () => {
             ...timesheet,
             [name]: value,
         });
+        calculateEarnings();
     };
 
     const handleShiftChange = (shift, day) => {
@@ -87,6 +93,7 @@ const SubmitTimesheet = () => {
                 [day]: false,
             },
         });
+        calculateEarnings();
     };
 
     const calculateEarnings = () => {
@@ -96,13 +103,7 @@ const SubmitTimesheet = () => {
         setEarnings(calculatedEarnings);
     };
 
-    const handleTimesheetSubmit = (e) => {
-        e.preventDefault();
-        calculateEarnings();
-        // Handle form submission logic here
-        console.log('Timesheet submitted:', timesheet);
-        
-    };
+    
 
     return (
         <div>
@@ -137,61 +138,71 @@ const SubmitTimesheet = () => {
                         <option value="careGiver">Vivalon</option>
                     </select>
                 </div>
-                <button type="submit">Submit</button>
-            </Form>
 
-            {formData && <SendInvoices formData={formData} />} {/* Render the InvoiceGenerator component with form data */}
-
-            <Form onSubmit={handleTimesheetSubmit}>
-                <Form.Group controlId="formWeekStartDate">
-                    <Form.Label>Week Start Date</Form.Label>
-                    <Form.Control
+                <div className="form-group" id="formWeekStartDate">
+                    <label>Week Start Date</label>
+                    <input
+                        {...register('start_date', { required: true })}
                         type="date"
                         name="weekStartDate"
                         value={timesheet.weekStartDate}
                         onChange={handleChange}
                         required
                     />
-                </Form.Group>
+                </div>
 
-                <Form.Group>
-                    <Form.Label>Day Shift</Form.Label>
-                    <Row>
+                <div className="form-group">
+                    <label>Day Shift</label>
+                    <div className="row">
                         {Object.keys(timesheet.dayShift).map((day) => (
-                            <Col key={day}>
-                                <Form.Check
+                            <div key={day} className="col">
+                                <input
                                     type="checkbox"
-                                    label={day.charAt(0).toUpperCase() + day.slice(1)}
+                                    id={`dayShift-${day}`}
                                     checked={timesheet.dayShift[day]}
                                     onChange={() => handleShiftChange('dayShift', day)}
                                 />
-                            </Col>
+                                <label htmlFor={`dayShift-${day}`}>
+                                    {day.charAt(0).toUpperCase() + day.slice(1)}
+                                </label>
+                            </div>
                         ))}
-                    </Row>
-                </Form.Group>
+                    </div>
+                </div>
 
-                <Form.Group>
-                    <Form.Label>Night Shift</Form.Label>
-                    <Row>
+                <div className="form-group">
+                    <label>Night Shift</label>
+                    <div className="row">
                         {Object.keys(timesheet.nightShift).map((day) => (
-                            <Col key={day}>
-                                <Form.Check
+                            <div key={day} className="col">
+                                <input
                                     type="checkbox"
-                                    label={day.charAt(0).toUpperCase() + day.slice(1)}
+                                    id={`nightShift-${day}`}
                                     checked={timesheet.nightShift[day]}
                                     onChange={() => handleShiftChange('nightShift', day)}
                                 />
-                            </Col>
+                                <label htmlFor={`nightShift-${day}`}>
+                                    {day.charAt(0).toUpperCase() + day.slice(1)}
+                                </label>
+                            </div>
                         ))}
-                    </Row>
-                </Form.Group>
+                    </div>
+                </div>
 
-                <Button variant="primary" type="submit">
-                    Submit Timesheet
-                </Button>
+                <div>
+                    <label>Earnings:</label>
+                     R{earnings}
+                </div>
+
+
+                <button type="submit">Submit</button>
+
+
             </Form>
 
-            <p>Earnings: R{earnings}</p>
+            
+
+            
         </div>
     );
 };
